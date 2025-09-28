@@ -1,6 +1,7 @@
 import java.io.File;
+import java.util.Scanner;
 
-public class cells {
+public class baloon {
 	public static void main (String args[]) throws Exception {
 		board foo = new board(new File("foo.txt"));
 		Thread.sleep(100);
