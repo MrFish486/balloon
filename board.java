@@ -29,12 +29,22 @@ public class board {
 			}
 		}
 	}
-	public board (board source) {
-		this.width  = source.width;
-		this.height = source.height;
-		this.board  = board.clone();
+	public board (board source) throws Exception {
+		this(source.serialize());
 	}
 	public String toString () {
+		String re = "";
+		for (int x = 0; x < this.width; x ++) {
+			for (int y = 0; y < this.height; y ++) {
+				if (this.board[x][y].powered) re += "\033[1m";
+				re += this.reverseTranslate(this.board[x][y].type);
+				if (this.board[x][y].powered) re += "\033[0m";
+			}
+			if (x != this.width) re += '\n';
+		}
+		return re;
+	}
+	public String serialize () {
 		String re = "";
 		for (int x = 0; x < this.width; x ++) {
 			for (int y = 0; y < this.height; y ++) {
@@ -44,12 +54,12 @@ public class board {
 		}
 		return re;
 	}
-	public void tick () {
-		int[][] new_board = new board(this);
+	public void tick () throws Exception {
+		board new_board = new board(this);
 		for (int x = 0; x < this.width; x ++) {
 			for (int y = 0; y < this.width; y ++) {
+				int type = this.board[x][y].type;
 				if (this.board[x][y].powered) {
-					int type = this.board[x][y].type;
 					if (type == 1) {
 						new_board.set(x, y - 1, true);
 					} else if (type == 2) {
@@ -63,15 +73,29 @@ public class board {
 						new_board.set(x + 1, y, true);
 						new_board.set(x, y - 1, true);
 						new_board.set(x, y + 1, true);
+					} else if (type == 10) {
+						new_board.set(x, y - 2, true);
+					} else if (type == 11) {
+						new_board.set(x, y + 2, true);
+					} else if (type == 12) {
+						new_board.set(x - 2, y, true);
+					} else if (type == 13) {
+						new_board.set(x + 2, y, true);
 					}
 					new_board.set(x, y, false);
 				} else {
 					 if (type == 6) {
-						new_board.set(x, y + 1, !this.get(x, y - 1, false));
+						new_board.set(x, y + 1, !this.is(x, y - 1));
 					} else if (type == 7) {
-						new_board.set(x, y + 1, this.get(x - 1, y) || this.get(x + 1, y));
+						new_board.set(x, y + 1, this.is(x - 1, y) || this.is(x + 1, y));
+					} else if (type == 8) {
+						new_board.set(x, y + 1, this.is(x - 1, y) ^ this.is(x + 1, y));
+					} else if (type == 14) {
+						new_board.set(x - 1, y, true);
+						new_board.set(x + 1, y, true);
+						new_board.set(x, y - 1, true);
+						new_board.set(x, y + 1, true);
 					}
-
 				}
 			}
 		}
@@ -82,8 +106,12 @@ public class board {
 		return true;
 	}
 	public int get (int x, int y) {
-		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return null;
-		return this.board[x][y];
+		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return -1;
+		return this.board[x][y].type;
+	}
+	public boolean is (int x, int y) {
+		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return false;
+		return this.board[x][y].powered;
 	}
 	private static int translate (char in) {
 		if (in == ' ') return 0;
@@ -119,6 +147,6 @@ public class board {
 		if (in == 12) return '⇠';
 		if (in == 13) return '⇢';
 		if (in == 14) return '⬡';
-		return 0;
+		return ' ';
 	}
 }
