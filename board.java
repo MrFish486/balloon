@@ -29,6 +29,11 @@ public class board {
 			}
 		}
 	}
+	public board (board source) {
+		this.width  = source.width;
+		this.height = source.height;
+		this.board  = board.clone();
+	}
 	public String toString () {
 		String re = "";
 		for (int x = 0; x < this.width; x ++) {
@@ -40,22 +45,45 @@ public class board {
 		return re;
 	}
 	public void tick () {
-		int[][] new_board = this.board.clone();
+		int[][] new_board = new board(this);
 		for (int x = 0; x < this.width; x ++) {
 			for (int y = 0; y < this.width; y ++) {
 				if (this.board[x][y].powered) {
 					int type = this.board[x][y].type;
 					if (type == 1) {
-						
+						new_board.set(x, y - 1, true);
+					} else if (type == 2) {
+						new_board.set(x, y + 1, true);
+					} else if (type == 3) {
+						new_board.set(x - 1, y, true);
+					} else if (type == 4) {
+						new_board.set(x + 1, y, true);
+					} else if (type == 5) {
+						new_board.set(x - 1, y, true);
+						new_board.set(x + 1, y, true);
+						new_board.set(x, y - 1, true);
+						new_board.set(x, y + 1, true);
 					}
+					new_board.set(x, y, false);
+				} else {
+					 if (type == 6) {
+						new_board.set(x, y + 1, !this.get(x, y - 1, false));
+					} else if (type == 7) {
+						new_board.set(x, y + 1, this.get(x - 1, y) || this.get(x + 1, y));
+					}
+
 				}
 			}
 		}
 	}
-	public boolean set (int x, int y, int value) {
+	public boolean set (int x, int y, boolean value) {
 		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return false;
-		this.board[x][y] = value;
+		this.board[x][y].powered = value;
 		return true;
+	}
+	public int get (int x, int y) {
+		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return null;
+		return this.board[x][y];
 	}
 	private static int translate (char in) {
 		if (in == ' ') return 0;
@@ -63,7 +91,7 @@ public class board {
 		if (in == '^' || in == '↑') return 2;
 		if (in == '<' || in == '←') return 3;
 		if (in == '>' || in == '→') return 4;
-		if (in == 'T' || in == '┬') return 5;
+		if (in == '+') return 5;
 		if (in == '!' || in == 'n') return 6;
 		if (in == 'o' || in == 'O') return 7;
 		if (in == 'x' || in == 'X') return 8;
@@ -81,7 +109,7 @@ public class board {
 		if (in == 2) return '↑';
 		if (in == 3) return '←';
 		if (in == 4) return '→';
-		if (in == 5) return '┬';
+		if (in == 5) return '+';
 		if (in == 6) return 'n';
 		if (in == 7) return 'O';
 		if (in == 8) return 'X';
