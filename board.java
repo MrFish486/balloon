@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 public class board {
 	int height;
 	int width;
 	cell[][] board;
+	flag activeflag = new flag(0, 0, false);
 	public board (int width, int height) {
 		this.board = new cell[width][height];
 		for (int x = 0; x < width; x ++) {
@@ -59,9 +62,46 @@ public class board {
 	}
 	public void tick () throws Exception {
 		board new_board = new board(this);
+		ArrayList <Thread> scheduledtasks = new ArrayList <Thread> ();
 		for (int x = 0; x < this.width; x ++) {
 			for (int y = 0; y < this.height; y ++) {
 				int type = this.board[x][y].type;
+				if (type == 14) {
+					new_board.set(x - 1, y, true);
+					new_board.set(x + 1, y, true);
+					new_board.set(x, y - 1, true);
+					new_board.set(x, y + 1, true);
+					new_board.set(x, y, true);
+				} else if (type == 6) {
+					new_board.set(x, y + 1, !this.is(x, y - 1));
+					new_board.set(x, y, !this.is(x, y - 1));
+				} else if (type == 7) {
+					new_board.set(x, y + 1, this.is(x - 1, y) || this.is(x + 1, y));
+					new_board.set(x, y, this.is(x - 1, y) || this.is(x + 1, y));
+				} else if (type == 8) {
+					new_board.set(x, y + 1, this.is(x - 1, y) ^ this.is(x + 1, y));
+					new_board.set(x, y, this.is(x - 1, y) ^ this.is(x + 1, y));
+				} else if (type == 9) {
+					boolean tpow = this.is(x - 1, y) && this.is(x + 1, y);
+					new_board.set(x, y + 1, tpow);
+					new_board.set(x, y, tpow);
+				} else if (type == 15) {
+					new_board.set(x - 1, y, true);
+					new_board.set(x + 1, y, true);
+					new_board.set(x, y - 1, true);
+					new_board.set(x, y + 1, true);
+					new_board.set(x, y, true);
+					new_board.setType(x, y, 0);
+				} else if (type == 16) {
+					boolean tpow = !(this.is(x - 1, y) && this.is(x + 1, y));
+					new_board.set(x, y + 1, tpow);
+					new_board.set(x, y, tpow);
+				} else if (type == 17) {
+					if (this.board[x][y].powered) {
+						scheduledtasks.add(new Thread(new setter(this, x, y, false)));
+					//	new_board.set(x, y, false);
+					}
+				}
 				if (this.board[x][y].powered) {
 					if (type == 1) {
 						new_board.set(x, y + 1, true);
@@ -85,37 +125,40 @@ public class board {
 					} else if (type == 13) {
 						new_board.set(x + 2, y, true);
 					}
-					new_board.set(x, y, false);
-				} else {
-					 if (type == 6) {
-						new_board.set(x, y + 1, !this.is(x, y - 1));
-					} else if (type == 7) {
-						new_board.set(x, y + 1, this.is(x - 1, y) || this.is(x + 1, y));
-					} else if (type == 8) {
-						new_board.set(x, y + 1, this.is(x - 1, y) ^ this.is(x + 1, y));
-					} else if (type == 14) {
-						new_board.set(x - 1, y, true);
-						new_board.set(x + 1, y, true);
-						new_board.set(x, y - 1, true);
-						new_board.set(x, y + 1, true);
-						new_board.set(x, y, true);
-					} else if (type == 15) {
-						new_board.set(x - 1, y, true);
-						new_board.set(x + 1, y, true);
-						new_board.set(x, y - 1, true);
-						new_board.set(x, y + 1, true);
-						new_board.set(x, y, true);
-						new_board.setType(x, y, 0);
-					}
+/*				} else {
+					if (type == 1) {
+						new_board.set(x, y + 1, false);
+					} else if (type == 2) {
+						new_board.set(x, y - 1, false);
+					} else if (type == 3) {
+						new_board.set(x - 1, y, false);
+					} else if (type == 4) {
+						new_board.set(x + 1, y, false);
+					} else if (type == 5) {
+						new_board.set(x - 1, y, false);
+						new_board.set(x + 1, y, false);
+						new_board.set(x, y - 1, false);
+						new_board.set(x, y + 1, false);
+					} else if (type == 10) {
+						new_board.set(x, y + 2, false);
+					} else if (type == 11) {
+						new_board.set(x, y - 2, false);
+					} else if (type == 12) {
+						new_board.set(x - 2, y, false);
+					} else if (type == 13) {
+						new_board.set(x + 2, y, false);
+					}*/
 				}
 			}
+		}
+		for (int i = 0; i < scheduledtasks.size(); i ++) {
+			scheduledtasks.get(i).start();
+			scheduledtasks.get(i).join();
 		}
 		this.board = new_board.board;
 	}
 	public boolean set (int x, int y, boolean value) {
 		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return false;
-		int a = this.get(x, y);
-		if (!(a == 1 || a == 2 || a == 3 || a == 4 || a == 10 || a == 11 || a == 12 || a == 13 || a == 5 || a == 14)) return false;
 		this.board[x][y].powered = value;
 		return true;
 	}
@@ -149,6 +192,8 @@ public class board {
 		if (in == 'R' || in == '►') return 13;
 		if (in == 'e' || in == '♦') return 14;
 		if (in == 'p' || in == '♣') return 15;
+		if (in == '@') return 16;
+		if (in == '=' || in == '●') return 17;
 		return 0;
 	}
 	private static char reverseTranslate (int in) {
@@ -168,6 +213,8 @@ public class board {
 		if (in == 13) return '►';
 		if (in == 14) return '♦';
 		if (in == 15) return '♣';
+		if (in == 16) return '@';
+		if (in == 17) return '●';
 		return ' ';
 	}
 	private static void put (int x, int y, String s) {
@@ -178,11 +225,16 @@ public class board {
 			for (int x = 0; x < this.width; x ++) {
 				String pow = "";
 				if (this.board[x][y].powered) pow += "\033[31m";
+				if (this.activeflag.test(x, y) && this.board[x][y].powered) pow += "\033[32m";
+				if (this.activeflag.test(x, y) && !this.board[x][y].powered) pow += "\033[33m";
 				pow += this.reverseTranslate(this.board[x][y].type);
 				if (this.board[x][y].powered) pow += "\033[0m";
 				this.put(x + 1, y + 1, pow);
 			}
 		}
+	}
+	private void flag (int x, int y) {
+		this.activeflag = new flag(x, y, true);
 	}
 	public static String format (String src) throws Exception {
 		return new board(src).toString();

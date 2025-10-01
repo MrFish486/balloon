@@ -25,6 +25,10 @@ public class balloon {
 			String formatted = board.format(balloon.readFile(new File(args[1])));
 			balloon.writeFile(args[1], formatted);
 			System.out.println(String.format("Formatted <%s>", args[1]));
+			return;
+		} else {
+			System.out.println(help);
+			return;
 		}
 	}
 	

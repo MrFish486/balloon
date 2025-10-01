@@ -5,4 +5,7 @@ public class cell {
 		this.type    = type;
 		this.powered = powered;
 	}
+	public String toString () {
+		return String.format("TYPE:%d, POWERED:%b", this.type, this.powered);
+	}
 }
