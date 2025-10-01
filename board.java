@@ -104,6 +104,7 @@ public class board {
 						new_board.set(x + 1, y, true);
 						new_board.set(x, y - 1, true);
 						new_board.set(x, y + 1, true);
+						new_board.set(x, y, true);
 						new_board.setType(x, y, 0);
 					}
 				}
