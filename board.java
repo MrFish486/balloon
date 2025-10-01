@@ -28,7 +28,10 @@ public class board {
 			for (int y = 0; y < this.height; y ++) {
 				for (int x = 0; x < this.width; x ++) {
 					//System.out.println(String.format("x=%d, y=%d", x, y));
-					char read = source.split("\n")[y].charAt(x);
+					char read = ' ';
+					try {
+						read = source.split("\n")[y].charAt(x);
+					} catch (Exception e) {}
 					this.board[x][y] = new cell(this.translate(read), false);
 				}
 			}
@@ -85,6 +88,7 @@ public class board {
 					boolean tpow = this.is(x - 1, y) && this.is(x + 1, y);
 					new_board.set(x, y + 1, tpow);
 					new_board.set(x, y, tpow);
+					scheduledtasks.add(new Thread(new setter(this, x, y, false)));
 				} else if (type == 15) {
 					new_board.set(x - 1, y, true);
 					new_board.set(x + 1, y, true);
