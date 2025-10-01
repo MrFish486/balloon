@@ -77,9 +77,9 @@ public class board {
 						new_board.set(x, y - 1, true);
 						new_board.set(x, y + 1, true);
 					} else if (type == 10) {
-						new_board.set(x, y - 2, true);
-					} else if (type == 11) {
 						new_board.set(x, y + 2, true);
+					} else if (type == 11) {
+						new_board.set(x, y - 2, true);
 					} else if (type == 12) {
 						new_board.set(x - 2, y, true);
 					} else if (type == 13) {
@@ -98,6 +98,7 @@ public class board {
 						new_board.set(x + 1, y, true);
 						new_board.set(x, y - 1, true);
 						new_board.set(x, y + 1, true);
+						new_board.set(x, y, true);
 					} else if (type == 15) {
 						new_board.set(x - 1, y, true);
 						new_board.set(x + 1, y, true);
@@ -113,7 +114,7 @@ public class board {
 	public boolean set (int x, int y, boolean value) {
 		if (x < 0 || x >= this.width || y < 0 || y >= this.height) return false;
 		int a = this.get(x, y);
-		if (!(a == 1 || a == 2 || a == 3 || a == 4 || a == 10 || a == 11 || a == 12 || a == 13 || a == 5)) return false;
+		if (!(a == 1 || a == 2 || a == 3 || a == 4 || a == 10 || a == 11 || a == 12 || a == 13 || a == 5 || a == 14)) return false;
 		this.board[x][y].powered = value;
 		return true;
 	}
@@ -181,5 +182,8 @@ public class board {
 				this.put(x + 1, y + 1, pow);
 			}
 		}
+	}
+	public static String format (String src) throws Exception {
+		return new board(src).toString();
 	}
 }
