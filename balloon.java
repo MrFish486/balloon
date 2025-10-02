@@ -13,12 +13,15 @@ public class balloon {
 			System.out.println(version);
 			return;
 		} else if (args[0].equals("run") && args.length == 2) {
+			int iterations = 0;
 			balloon.cursor();
 			balloon.clear();
 			board main = new board(balloon.readFile(new File(args[1])));
 			while (true) {
 				main.render();
 				main.tick();
+				System.out.println("\n" + String.valueOf(iterations));
+				iterations ++;
 				Thread.sleep(100);
 			}
 		} else if (args[0].equals("-f") && args.length == 2) {
