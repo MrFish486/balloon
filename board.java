@@ -21,8 +21,11 @@ public class board {
 			this.height = 0;
 			this.board  = new cell[0][0];
 		} else {
-			this.width  = source.split("\n")[0].length();
 			this.height = source.split("\n").length;
+			this.width  = source.split("\n")[0].length();
+			for (int i = 0; i < height; i ++) { // Seek height
+				if (source.split("\n")[i].length() > this.width) this.width = source.split("\n")[i].length();
+			}
 			//System.out.println(String.format("h=%d, w=%d", height, width));
 			this.board = new cell[width][height];
 			for (int y = 0; y < this.height; y ++) {
