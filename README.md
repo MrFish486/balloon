@@ -1,8 +1,22 @@
-## Balloon
-### A turing complete visual programming language
+# Balloon 0.2
+## A turing complete visual programming language
+
+### Usage
+
+```
+balloon run <file> (-f) - run a file (-f runs without delay).
+balloon -f  <file>      - format a file
+balloon -v              - print version and exit
+```
+
+### Writing programs
+
 #### Control
+
 ` ` A space. This character is passed through.
+
 `/` Does nothing. Can be used for visually dividing sections
+
 #### Moving
 `v` / `↓` Moves electricity down.
 

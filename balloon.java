@@ -4,8 +4,8 @@ import java.io.PrintWriter;
 
 public class balloon {
 	public static void main (String args[]) throws Exception {
-		String help = "balloon run <file> - run a file (use -h to accelerate).\nballoon -f  <file> - format a file\nballoon -v         - print version and exit";
-		String version = "0.1";
+		String help = "balloon run <file> (-f) - run a file (-f runs without delay).\nballoon -f  <file>      - format a file\nballoon -v              - print version and exit";
+		String version = "0.2";
 		if (args.length == 0) {
 			System.out.println(help);
 			return;
