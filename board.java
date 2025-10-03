@@ -256,6 +256,7 @@ public class board {
 				if (this.activeflag.test(x, y) && !this.board[x][y].powered) pow += "\033[33m";
 				pow += this.reverseTranslate(this.board[x][y].type);
 				if (this.board[x][y].powered) pow += "\033[0m";
+				if (this.board[x][y].type == 20) pow = "\033[32m/\033[0m";
 				this.put(x + 1, y + 1, pow);
 			}
 		}
