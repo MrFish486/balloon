@@ -66,7 +66,7 @@ public class board {
 		}
 		return re;
 	}
-	public void tick () throws Exception {
+	public void tick (int iterations) throws Exception {
 		board new_board = new board(this);
 		ArrayList <Thread> scheduledtasks = new ArrayList <Thread> ();
 		for (int x = 0; x < this.width; x ++) {
@@ -131,6 +131,20 @@ public class board {
 						new_board.set(x - 2, y, true);
 					} else if (type == 13) {
 						new_board.set(x + 2, y, true);
+					} else if (type == 18) {
+						scheduledtasks.add(new Thread(new Runnable() {
+							public void run () {
+								System.out.println(String.format("\nExited in %d ticks.", iterations));
+								System.exit(0);
+							}
+						}, "enderthread"));
+					} else if (type == 19) {
+						scheduledtasks.add(new Thread(new Runnable() {
+							public void run () {
+								System.out.println(String.format("\nExited in %d ticks.", iterations));
+								System.exit(1);
+							}
+						}, "enderthread"));
 					}
 /*				} else {
 					if (type == 1) {
@@ -201,6 +215,9 @@ public class board {
 		if (in == 'p' || in == '♣') return 15;
 		if (in == '@') return 16;
 		if (in == '=' || in == '●') return 17;
+		if (in == '0' || in == '0') return 18;
+		if (in == '1' || in == '1') return 19;
+		if (in == '/') return 20;
 		return 0;
 	}
 	private static char reverseTranslate (int in) {
@@ -222,6 +239,9 @@ public class board {
 		if (in == 15) return '♣';
 		if (in == 16) return '@';
 		if (in == 17) return '●';
+		if (in == 18) return '0';
+		if (in == 19) return '1';
+		if (in == 20) return '/';
 		return ' ';
 	}
 	private static void put (int x, int y, String s) {

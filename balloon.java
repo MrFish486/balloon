@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 
 public class balloon {
 	public static void main (String args[]) throws Exception {
-		String help = "balloon run <file> - run a file.\nballoon -f  <file> - format a file\nballoon -v         - print version and exit";
+		String help = "balloon run <file> - run a file (use -h to accelerate).\nballoon -f  <file> - format a file\nballoon -v         - print version and exit";
 		String version = "0.1";
 		if (args.length == 0) {
 			System.out.println(help);
@@ -12,17 +12,26 @@ public class balloon {
 		} else if (args[0].equals("-v") && args.length == 1) {
 			System.out.println(version);
 			return;
-		} else if (args[0].equals("run") && args.length == 2) {
+		} else if (args[0].equals("run") && args.length > 1 && args.length < 4) { //hyper
 			int iterations = 0;
 			balloon.cursor();
 			balloon.clear();
 			board main = new board(balloon.readFile(new File(args[1])));
-			while (true) {
-				main.render();
-				main.tick();
-				System.out.println("\n" + String.valueOf(iterations));
-				iterations ++;
-				Thread.sleep(100);
+			if (args.length == 3 && args[2].equals("-h")) {
+				while (true) {
+					main.render();
+					main.tick(iterations);
+					System.out.println("\n" + String.valueOf(iterations));
+					iterations ++;
+				}
+			} else {
+				while (true) {
+					main.render();
+					main.tick(iterations);
+					System.out.println("\n" + String.valueOf(iterations));
+					iterations ++;
+					Thread.sleep(100);
+				}
 			}
 		} else if (args[0].equals("-f") && args.length == 2) {
 			String formatted = board.format(balloon.readFile(new File(args[1])));
