@@ -215,8 +215,8 @@ public class board {
 		if (in == 'p' || in == '♣') return 15;
 		if (in == '@') return 16;
 		if (in == '=' || in == '●') return 17;
-		if (in == '0' || in == '0') return 18;
-		if (in == '1' || in == '1') return 19;
+		if (in == '0') return 18;
+		if (in == '1') return 19;
 		if (in == '/') return 20;
 		return 0;
 	}
