@@ -11,6 +11,8 @@ balloon -v              - print version and exit
 
 ### Writing programs
 
+Balloon can run any type of file, but use a `.balloon` file for good practice. The concept of balloon is that it interprets files as a 2d grid and electricity moves between wires and through components.
+
 #### Control
 
 ` ` A space. This character is passed through.
