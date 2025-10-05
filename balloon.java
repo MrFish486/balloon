@@ -19,14 +19,14 @@ public class balloon {
 			board main = new board(balloon.readFile(new File(args[1])));
 			if (args.length == 3 && args[2].equals("-h")) {
 				while (true) {
-					main.render();
+					main.optimizedRender();
 					main.tick(iterations);
 					System.out.println("\n" + String.valueOf(iterations));
 					iterations ++;
 				}
 			} else {
 				while (true) {
-					main.render();
+					main.optimizedRender();
 					main.tick(iterations);
 					System.out.println("\n" + String.valueOf(iterations));
 					iterations ++;

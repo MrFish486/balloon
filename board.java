@@ -79,14 +79,17 @@ public class board {
 					new_board.set(x, y + 1, true);
 					new_board.set(x, y, true);
 				} else if (type == 6) {
-					new_board.set(x, y + 1, !this.is(x, y - 1));
-					new_board.set(x, y, !this.is(x, y - 1));
+					boolean tpow = !this.is(x, y - 1);
+					new_board.set(x, y + 1, tpow);
+					new_board.set(x, y, tpow);
 				} else if (type == 7) {
-					new_board.set(x, y + 1, this.is(x - 1, y) || this.is(x + 1, y));
-					new_board.set(x, y, this.is(x - 1, y) || this.is(x + 1, y));
+					boolean tpow = this.is(x - 1, y) || this.is(x + 1, y);
+					new_board.set(x, y + 1, tpow);
+					new_board.set(x, y, tpow);
 				} else if (type == 8) {
-					new_board.set(x, y + 1, this.is(x - 1, y) ^ this.is(x + 1, y));
-					new_board.set(x, y, this.is(x - 1, y) ^ this.is(x + 1, y));
+					boolean tpow = this.is(x - 1, y) ^ this.is(x + 1, y);
+					new_board.set(x, y + 1, tpow);
+					new_board.set(x, y, tpow);
 				} else if (type == 9) {
 					boolean tpow = this.is(x - 1, y) && this.is(x + 1, y);
 					new_board.set(x, y + 1, tpow);
@@ -247,6 +250,9 @@ public class board {
 	private static void put (int x, int y, String s) {
 		System.out.print(String.format("\033[%d;%df%s", y, x, s));
 	}
+	private static String putform (int x, int y, String s) {
+		return String.format("\033[%d;%df%s", y, x, s);
+	}
 	public void render () {
 		for (int y = 0; y < this.height; y ++) {
 			for (int x = 0; x < this.width; x ++) {
@@ -260,6 +266,22 @@ public class board {
 				this.put(x + 1, y + 1, pow);
 			}
 		}
+	}
+	public void optimizedRender () {
+		String output = "";
+		for (int y = 0; y < this.height; y ++) {
+			for (int x = 0; x < this.width; x ++) {
+				String pow = "";
+				if (this.board[x][y].powered) pow = "\033[31m";
+				if (this.activeflag.test(x, y) && this.board[x][y].powered) pow = "\033[32m";
+				if (this.activeflag.test(x, y) && !this.board[x][y].powered) pow = "\033[33m";
+				pow += this.reverseTranslate(this.board[x][y].type);
+				if (this.board[x][y].powered) pow += "\033[0m";
+				if (this.board[x][y].type == 20) pow = "\033[32m/\033[0m";
+				output += this.putform(x + 1, y + 1, pow);
+			}
+		}
+		System.out.print(output);
 	}
 	private void flag (int x, int y) {
 		this.activeflag = new flag(x, y, true);
