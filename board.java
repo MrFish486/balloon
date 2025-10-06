@@ -149,29 +149,6 @@ public class board {
 							}
 						}, "enderthread"));
 					}
-/*				} else {
-					if (type == 1) {
-						new_board.set(x, y + 1, false);
-					} else if (type == 2) {
-						new_board.set(x, y - 1, false);
-					} else if (type == 3) {
-						new_board.set(x - 1, y, false);
-					} else if (type == 4) {
-						new_board.set(x + 1, y, false);
-					} else if (type == 5) {
-						new_board.set(x - 1, y, false);
-						new_board.set(x + 1, y, false);
-						new_board.set(x, y - 1, false);
-						new_board.set(x, y + 1, false);
-					} else if (type == 10) {
-						new_board.set(x, y + 2, false);
-					} else if (type == 11) {
-						new_board.set(x, y - 2, false);
-					} else if (type == 12) {
-						new_board.set(x - 2, y, false);
-					} else if (type == 13) {
-						new_board.set(x + 2, y, false);
-					}*/
 				}
 			}
 		}
